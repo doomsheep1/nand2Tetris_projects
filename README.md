@@ -1,7 +1,7 @@
 ## Project description
-This project holds the completed projects for the free course [Nand2Tetris]https://www.nand2tetris.org/software. Projects 6, 7, 8, 10, and 11 were written in rust.
-The projects were also based on the book [The Elements of Computing Systems
-Building a Modern Computer from First Principles]https://mitpress.mit.edu/9780262539807/the-elements-of-computing-systems/
+This project holds the completed projects for the free course <a href="https://www.nand2tetris.org/software">Nand2Tetris</a>. Projects 6, 7, 8, 10, and 11 were written in rust.
+The projects were also based on the book <a href="https://mitpress.mit.edu/9780262539807/the-elements-of-computing-systems/">The Elements of Computing Systems
+Building a Modern Computer from First Principles</a>
 
 ### Chapters
 1. Boolean Logic
