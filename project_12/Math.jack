@@ -1,0 +1,162 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Math.jack
+/**
+ *  A library of commonly used mathematical functions.
+ *  All functions runs in O(n), where n is the number of bits used
+ *  for representing a two's complement integer value (16 in the Hack computer). 
+ *  Note: Jack compilers implement multiplication and division
+ *  using calls to OS functions in this class.
+ */
+class Math {
+    static int n;             // Number of bits used for representing a two's complement integer
+    static Array powersOfTwo; // Stores 2^0, 2^1, 2^2,..., 2^(n-1)
+
+    // Initializes the Math library.
+    function void init() {
+        var int i, bitVal;
+        let i = 0;
+        let n = 16;
+        let bitVal = 1;
+        let powersOfTwo = Array.new(n);
+        while(i < n) {
+            let powersOfTwo[i] = bitVal;
+            let bitVal = bitVal + bitVal;
+            let i = i + 1;
+        }
+
+        return;
+    }
+
+    function int twoToThe(int power) {
+        return powersOfTwo[power];
+    }
+
+    /** Returns the product of x and y. 
+     *  When a Jack compiler detects the multiplication operator '*'
+     *  in an expression, it handles it by invoking this method. 
+     *  Thus, in Jack, x * y and Math.multiply(x,y) return the same value. */
+    function int multiply(int x, int y) {
+        var int sum, shiftedX, i;
+
+        let sum = 0;
+        let shiftedX = x;
+        let i = 0;
+        while(i < 16) {
+            if(Math.bit(y,i)) {
+                let sum = sum + shiftedX;                
+            }
+
+            let shiftedX = shiftedX + shiftedX;
+            let i = i + 1;
+        }
+
+        return sum;
+
+    }
+
+    /** Returns the integer part of x / y.
+     *  When a Jack compiler detects the division operator '/'
+     *  an an expression, it handles it by invoking this method.
+     *  Thus, x/y and Math.divide(x,y) return the same value. */
+    function int divide(int x, int y) {
+        var int absX,absY, result, q;
+        var boolean negX,negY;
+        let negX = x < 0;
+        let negY = y < 0;
+        if(negX) {
+            let absX = Math.abs(x);
+        } else {
+            let absX = x;
+        }
+
+        if(negY) {
+            let absY = Math.abs(y);
+        } else {
+            let absY = y;
+        }
+
+        if((absY > absX) | (absY < 0)) {
+            let result = 0;
+        } else {
+            let q = Math.divide(absX,absY+absY);
+            if((absX-(2*q*absY)) < absY) {
+                let result = q + q;
+            } else {
+                let result = q+q+1;
+            }
+
+            if(~(negX = negY)) {
+                let result = -result;
+            }
+        }
+        
+        return result;
+    }
+
+    /** Returns the integer part of the square root of x. */
+    function int sqrt(int x) {
+        var int result, i, temp, temp2;
+        let result = 0;
+        let i = n/2 - 1;
+        while((i > 0) | (i = 0)) {
+            let temp = result + powersOfTwo[i];
+            let temp2 = temp * temp;
+            if(((temp2 < x) | (temp2 = x)) & temp2 > 0) {
+                let result = temp;
+            }
+            let i = i - 1;
+        }
+
+        return result;
+    }
+
+    /** Returns the greater value. */
+    function int max(int a, int b) {
+        var int greater;
+        if(a > b) {
+            let greater = a;
+        } else {
+            let greater = b;
+        }
+
+        return greater;
+    }
+
+    /** Returns the smaller value. */
+    function int min(int a, int b) {
+        var int smaller;
+        if(a < b) {
+            let smaller = a;
+        } else {
+            let smaller = b;
+        }
+
+        return smaller;
+    }
+
+    /** Returns the absolute value of x. */
+    function int abs(int x) {
+        var int result;
+        
+        if(x < 0) {
+            let result = -x;
+        } else {
+            let result = x;
+        }
+
+        return result;
+    }
+
+    function boolean bit(int x, int i) {
+        var boolean result;
+        if((powersOfTwo[i] & x) = 0) {
+            let result = false;
+        } else {
+            let result = true;
+        }
+
+        return result;
+    }
+}

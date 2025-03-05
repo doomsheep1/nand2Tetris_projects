@@ -1,0 +1,200 @@
+function EnemyManager.new 0
+    push constant 3
+    call Memory.alloc 1
+    pop pointer 0
+    push constant 2
+    pop this 0
+    push argument 0
+    pop this 1
+    push pointer 0
+    call EnemyManager.spawnEnemies 1
+    pop temp 0
+    push pointer 0
+    return
+function EnemyManager.getEnemyCount 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push this 1
+    call Math.multiply 2
+    return
+function EnemyManager.setEnemyCount 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 0
+    push constant 0
+    return
+function EnemyManager.getEnemyArray 0
+    push argument 0
+    pop pointer 0
+    push this 2
+    return
+function EnemyManager.spawnEnemies 6
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call EnemyManager.getEnemyCount 1
+    call Array.new 1
+    pop this 2
+    push constant 1
+    pop local 1
+    push constant 0
+    pop local 0
+label EnemyManager_0
+    push local 0
+    push pointer 0
+    call EnemyManager.getEnemyCount 1
+    lt
+    not
+    if-goto EnemyManager_1
+    push pointer 0
+    push local 1
+    push constant 240
+    push constant 60
+    call EnemyManager.randomNumber 4
+    pop local 1
+    push local 1
+    pop local 5
+    push local 5
+    push constant 22
+    sub
+    push constant 0
+    lt
+    not
+    if-goto EnemyManager_3
+    push constant 0
+    pop local 5
+    goto EnemyManager_2
+label EnemyManager_3
+label EnemyManager_2
+    push local 5
+    push constant 240
+    gt
+    push local 5
+    push constant 240
+    eq
+    or
+    push local 5
+    push constant 22
+    add
+    push constant 240
+    gt
+    or
+    not
+    if-goto EnemyManager_5
+    push constant 240
+    push constant 23
+    sub
+    pop local 5
+    goto EnemyManager_4
+label EnemyManager_5
+label EnemyManager_4
+    push constant 511
+    push local 5
+    call Enemy.new 2
+    pop local 4
+    push local 0
+    push this 2
+    add
+    push local 4
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto EnemyManager_0
+label EnemyManager_1
+    push constant 0
+    return
+function EnemyManager.testLcg 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    push argument 1
+    push constant 512
+    push constant 508
+    call EnemyManager.randomNumber 4
+    return
+function EnemyManager.randomNumber 3
+    push argument 0
+    pop pointer 0
+    push constant 105
+    pop local 0
+    push argument 3
+    push constant 1
+    add
+    push argument 1
+    call Math.multiply 2
+    push local 0
+    add
+    pop local 1
+    push local 1
+    push local 1
+    push argument 2
+    call Math.divide 2
+    push argument 2
+    call Math.multiply 2
+    sub
+    pop local 2
+    push local 2
+    return
+function EnemyManager.setLevel 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 1
+    push constant 0
+    return
+function EnemyManager.getLevel 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    return
+function EnemyManager.dispose 2
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+label EnemyManager_6
+    push local 0
+    push pointer 0
+    call EnemyManager.getEnemyCount 1
+    lt
+    not
+    if-goto EnemyManager_7
+    push local 0
+    push this 2
+    add
+    pop pointer 1
+    push that 0
+    pop local 1
+    push local 1
+    push constant 0
+    eq
+    not
+    not
+    if-goto EnemyManager_9
+    push local 1
+    call Enemy.dispose 1
+    pop temp 0
+    goto EnemyManager_8
+label EnemyManager_9
+label EnemyManager_8
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto EnemyManager_6
+label EnemyManager_7
+    push this 2
+    call Array.dispose 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return

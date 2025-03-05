@@ -1,0 +1,32 @@
+/* output class for text follows screen size of 58 * 22 columns (best fit i could push for) */
+class ScoreManager {
+    field int currentScore;
+
+    constructor ScoreManager new() {
+        let currentScore = 0;
+        do draw();
+        return this;
+    }
+
+    method void draw() {
+        do Output.moveCursor(22,0);
+        do Output.printString("Score:");
+        do Output.printInt(currentScore);
+        return;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void setScore(int value) {
+        let currentScore = value;
+        do draw();
+        return;
+    }
+
+    method void getScore() {
+        return currentScore;
+    }
+}

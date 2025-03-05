@@ -1,0 +1,145 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Memory.jack
+/**
+ * This library provides two services: direct access to the computer's main
+ * memory (RAM), and allocation and recycling of memory blocks. The Hack RAM
+ * consists of 32,768 words, each holding a 16-bit binary number.
+ */ 
+class Memory {
+    static Array freeList, ram;
+    static int heapBase, segmentSize, next;
+
+    /** Initializes the class. */
+    function void init() {
+        let heapBase = 2048;
+        let ram = 0;
+        let next = 0; 
+        let segmentSize = 1;
+        let freeList = heapBase;
+        let freeList[next] = null;
+        let freeList[segmentSize] = 16384-2048-2; // address range from 2048 to 16383
+        return;
+    }
+
+    /** Returns the RAM value at the given address. */
+    function int peek(int address) {
+        return ram[address];
+    }
+
+    /** Sets the RAM value at the given address to the given value. */
+    function void poke(int address, int value) {
+        let ram[address] = value;
+        return;
+    }
+
+    /** Finds an available RAM block of the given size and returns
+     *  a reference to its base address. */
+    function Array alloc(int size) {
+        var Array currentSegment, previousSegment, nextSegment;
+        var int retAddress, statusCode, availableSize;
+        let statusCode = 0;
+        let currentSegment = freeList;
+        let previousSegment = 0;
+        
+        while(currentSegment[segmentSize] < size) {
+            let previousSegment = currentSegment;
+            let currentSegment = currentSegment[next];
+            if(currentSegment = null) {
+                let statusCode = 1; 
+            }
+        }
+
+        if(statusCode = 0) { // found an appropriate segment
+            let availableSize = currentSegment[segmentSize] - size;
+            // it needs to be at least greater than 2 as [segmentsize] and [next] require 2 addresses + 1 free block as having a [segmentSize] of 0 is pointless
+            if(availableSize > 2) {
+                let nextSegment = currentSegment + 2 + size;
+                let nextSegment[next] = currentSegment[next];
+                // set next segment and its size to deduct current found segment
+                let nextSegment[segmentSize] = currentSegment[segmentSize] - 2 - size; // nextSegment[segmentSize] will at least be 1
+                let currentSegment[segmentSize] = size;
+            } else {
+                /* 
+                    Current segment is large enough to fulfill the memory allocation request, but the linking of next segment in freeList
+                    needs to avoid already allocated memory addresses
+                */
+                let nextSegment = currentSegment[next];
+                // This handles the scenario that there is only 1 free address to assign [next] but none for [segmentSize]
+                // solution is to just screw it and allocate more memory than "size"
+                if(availableSize > 0) {
+                    let currentSegment[segmentSize] = size + availableSize;
+                }
+            }
+            
+            // update freeList
+            // remove current segment from the linked freeList
+            if(previousSegment = 0) {
+                let freeList = nextSegment;
+            } else {
+                let previousSegment[next] = nextSegment;
+            }
+
+            let currentSegment[next] = null;
+            let retAddress = currentSegment + 2;
+        }
+        
+        return retAddress;
+    }
+
+    /** De-allocates the given object (cast as an array) by making
+     *  it available for future allocations. */
+    function void deAlloc(Array o) {
+        var Array returnSegment;
+
+        // deallocate
+        let returnSegment = o - 2;
+        let returnSegment[next] = freeList;
+        let freeList = returnSegment; // 2075
+        do Memory.defragHeap();
+
+        return;
+    }   
+
+    function void defragHeap() {
+        var Array segmentIterator, defragSegment;
+        var int currSegmentSize, currSegmentAddress;
+        let segmentIterator = freeList;
+        let defragSegment = freeList;
+
+        while(~(segmentIterator[next] = null)) {
+            let currSegmentAddress = segmentIterator;
+            let currSegmentSize = segmentIterator[segmentSize]; // 522
+            let segmentIterator = segmentIterator[next]; // 2577
+            if(defragSegment + 2 + defragSegment[segmentSize] = segmentIterator) {
+                let defragSegment[segmentSize] = defragSegment[segmentSize] + 2 + segmentIterator[segmentSize];
+                if(~(defragSegment = currSegmentAddress)) {
+                    do Memory.poke(currSegmentAddress, null);
+                    do Memory.poke(currSegmentAddress + segmentSize, null);
+                }
+            } else {
+                if((defragSegment - 2 - segmentIterator[segmentSize]) = segmentIterator) {
+                    let segmentIterator[segmentSize] = segmentIterator[segmentSize] + 2 + defragSegment[segmentSize];
+                    do Memory.poke(defragSegment, null);
+                    do Memory.poke(defragSegment + segmentSize, null);
+                    let defragSegment = segmentIterator;
+                    let freeList = defragSegment;
+                } else {
+                    let defragSegment[next] = segmentIterator;
+                    let defragSegment = segmentIterator;
+                }
+            }
+        }
+
+        if(~(defragSegment = segmentIterator)) {
+            let segmentIterator[segmentSize] = null;
+        }
+
+        if(defragSegment[next] = segmentIterator) {
+            let defragSegment[next] = null;
+        }
+
+        return;
+    } 
+}

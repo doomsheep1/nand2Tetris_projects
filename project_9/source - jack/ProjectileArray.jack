@@ -1,0 +1,82 @@
+class ProjectileArray {
+    field int currentLength, maxSize;
+    field Array array;
+
+    constructor ProjectileArray new(int size) {
+        let maxSize = size;
+        let array = Array.new(size);
+        let currentLength = 0;
+        do draw();
+        return this;
+    }
+
+    method int getMaxSize() {
+        return maxSize;
+    }
+
+    method void enqueue(Projectile projectile) {
+        if (currentLength < maxSize) {
+            let array[currentLength] = projectile;
+            do projectile.setIndex(currentLength);
+            let currentLength = currentLength + 1;
+        }
+        do draw(); 
+        return;
+    }
+
+    method void remove(int index) {
+        var int i;
+        var Projectile currentProjectile;
+        if (currentLength > 0) {
+            let currentProjectile = array[index];
+            do currentProjectile.dispose();
+            let array[index] = null;
+            let i = index + 1;
+            // shift left
+            while(i < currentLength) {
+                let currentProjectile = array[i];
+                do currentProjectile.setIndex(i-1);
+                let array[i-1] = currentProjectile;
+                let i = i + 1;
+            }
+            let currentLength = currentLength - 1;
+        } 
+        do draw();
+        return;
+    }
+
+    method Array getProjectiles() {
+        return array;
+    }
+
+    method int getCurrentLength() {
+        return currentLength;
+    }
+
+    method void dispose() {
+        var int i;
+        var Projectile currentProjectile;
+        let i = 0;
+        while(i < currentLength) {
+            let currentProjectile = array[i];
+            if(~(currentProjectile = null)) {
+                do currentProjectile.dispose();
+            }
+            let i = i + 1;
+        }
+        do array.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void draw() {
+        do Output.moveCursor(22,57);
+        do Output.printString("Ammo:");
+        if (currentLength > 0) {
+            do Output.moveCursor(22,63);
+            do Output.backSpace();
+        }
+        do Output.printInt(maxSize-currentLength);
+        return;
+    }
+}

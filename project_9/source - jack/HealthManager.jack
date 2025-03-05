@@ -1,0 +1,82 @@
+class HealthManager {
+    field int healthPoints, sizeX, sizeY;
+
+    constructor HealthManager new() {
+        let healthPoints = 3;
+        let sizeX = 15;
+        let sizeY = 10;
+        do draw();
+        return this;
+    }
+
+    /* 15 * 10 */
+    method void draw() {
+        var int x, y, memAddress, i;
+        let x = 2;
+        let y = 1;
+        let i = 0;
+        while(i < healthPoints) {
+            if (i > 0) {
+                let x = x + sizeX; // 2, 17, 32
+            }
+            let memAddress = 16384 + (y*32) + (x/16);
+            // column 0
+            do Memory.poke(memAddress, 7196);
+            do Memory.poke(memAddress +32, 13158);
+            do Memory.poke(memAddress +64, 16577);
+            do Memory.poke(memAddress +96, 16385);
+            do Memory.poke(memAddress +128, 16385);
+            do Memory.poke(memAddress +160, 12294);
+            do Memory.poke(memAddress +192, 6156);
+            do Memory.poke(memAddress +224, 3096);
+            do Memory.poke(memAddress +256, 1584);
+            do Memory.poke(memAddress +288, 992);
+            let i = i + 1;
+        }
+        
+        return;
+    }
+
+    method void dispose() {
+        let healthPoints = 2;
+        do erase();
+        let healthPoints = 1;
+        do erase();
+        let healthPoints = 0;
+        do erase();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void setHealthPoints(int health) {
+        let healthPoints = health;
+        if((healthPoints < 0) | (healthPoints = 0)) {
+            let healthPoints = 0;
+        }
+        do erase();
+        return;
+    }
+
+    method void getHealthPoints() {
+        return healthPoints;
+    }
+
+    // super lazy way but whatever
+    method void erase() {
+        if(healthPoints = 2) {
+            do Screen.setColor(false);
+            do Screen.drawRectangle(32, 1, 32+sizeX, sizeY);
+        }
+
+        if(healthPoints = 1) {
+            do Screen.setColor(false);
+            do Screen.drawRectangle(16,1,17+sizeX,sizeY);
+        }
+
+        if(healthPoints = 0) {
+            do Screen.setColor(false);
+            do Screen.drawRectangle(0,1,2+sizeX,sizeY);
+        }
+        return;
+    }
+}

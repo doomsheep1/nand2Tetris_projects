@@ -1,0 +1,223 @@
+function ProjectileArray.new 0
+    push constant 3
+    call Memory.alloc 1
+    pop pointer 0
+    push argument 0
+    pop this 1
+    push argument 0
+    call Array.new 1
+    pop this 2
+    push constant 0
+    pop this 0
+    push pointer 0
+    call ProjectileArray.draw 1
+    pop temp 0
+    push pointer 0
+    return
+function ProjectileArray.getMaxSize 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    return
+function ProjectileArray.enqueue 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push this 1
+    lt
+    not
+    if-goto ProjectileArray_1
+    push this 0
+    push this 2
+    add
+    push argument 1
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push argument 1
+    push this 0
+    call Projectile.setIndex 2
+    pop temp 0
+    push this 0
+    push constant 1
+    add
+    pop this 0
+    goto ProjectileArray_0
+label ProjectileArray_1
+label ProjectileArray_0
+    push pointer 0
+    call ProjectileArray.draw 1
+    pop temp 0
+    push constant 0
+    return
+function ProjectileArray.remove 2
+    push argument 0
+    pop pointer 0
+    push this 0
+    push constant 0
+    gt
+    not
+    if-goto ProjectileArray_3
+    push argument 1
+    push this 2
+    add
+    pop pointer 1
+    push that 0
+    pop local 1
+    push local 1
+    call Projectile.dispose 1
+    pop temp 0
+    push argument 1
+    push this 2
+    add
+    push constant 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push argument 1
+    push constant 1
+    add
+    pop local 0
+label ProjectileArray_4
+    push local 0
+    push this 0
+    lt
+    not
+    if-goto ProjectileArray_5
+    push local 0
+    push this 2
+    add
+    pop pointer 1
+    push that 0
+    pop local 1
+    push local 1
+    push local 0
+    push constant 1
+    sub
+    call Projectile.setIndex 2
+    pop temp 0
+    push local 0
+    push constant 1
+    sub
+    push this 2
+    add
+    push local 1
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto ProjectileArray_4
+label ProjectileArray_5
+    push this 0
+    push constant 1
+    sub
+    pop this 0
+    goto ProjectileArray_2
+label ProjectileArray_3
+label ProjectileArray_2
+    push pointer 0
+    call ProjectileArray.draw 1
+    pop temp 0
+    push constant 0
+    return
+function ProjectileArray.getProjectiles 0
+    push argument 0
+    pop pointer 0
+    push this 2
+    return
+function ProjectileArray.getCurrentLength 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    return
+function ProjectileArray.dispose 2
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+label ProjectileArray_6
+    push local 0
+    push this 0
+    lt
+    not
+    if-goto ProjectileArray_7
+    push local 0
+    push this 2
+    add
+    pop pointer 1
+    push that 0
+    pop local 1
+    push local 1
+    push constant 0
+    eq
+    not
+    not
+    if-goto ProjectileArray_9
+    push local 1
+    call Projectile.dispose 1
+    pop temp 0
+    goto ProjectileArray_8
+label ProjectileArray_9
+label ProjectileArray_8
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto ProjectileArray_6
+label ProjectileArray_7
+    push this 2
+    call Array.dispose 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return
+function ProjectileArray.draw 0
+    push argument 0
+    pop pointer 0
+    push constant 22
+    push constant 57
+    call Output.moveCursor 2
+    pop temp 0
+    push constant 5
+    call String.new 1
+    push constant 65
+    call String.appendChar 2
+    push constant 109
+    call String.appendChar 2
+    push constant 109
+    call String.appendChar 2
+    push constant 111
+    call String.appendChar 2
+    push constant 58
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+    push this 0
+    push constant 0
+    gt
+    not
+    if-goto ProjectileArray_11
+    push constant 22
+    push constant 63
+    call Output.moveCursor 2
+    pop temp 0
+    call Output.backSpace 0
+    pop temp 0
+    goto ProjectileArray_10
+label ProjectileArray_11
+label ProjectileArray_10
+    push this 1
+    push this 0
+    sub
+    call Output.printInt 1
+    pop temp 0
+    push constant 0
+    return

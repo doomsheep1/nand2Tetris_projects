@@ -1,0 +1,528 @@
+function Game.new 0
+    push constant 6
+    call Memory.alloc 1
+    pop pointer 0
+    call Screen.clearScreen 0
+    pop temp 0
+    push constant 0
+    pop this 3
+    push constant 240
+    pop this 4
+    push constant 0
+    pop this 2
+    push constant 0
+    pop this 1
+    push constant 0
+    pop this 5
+    push constant 0
+    push constant 127
+    push constant 511
+    push this 4
+    push constant 1
+    sub
+    call Kuromi.new 4
+    pop this 0
+    push constant 10
+    call ProjectileArray.new 1
+    pop static 1
+    call ScoreManager.new 0
+    pop static 2
+    call HealthManager.new 0
+    pop static 3
+    push constant 1
+    call EnemyManager.new 1
+    pop static 4
+    push pointer 0
+    call Game.drawBounds 1
+    pop temp 0
+    push pointer 0
+    return
+function Game.newInstance 0
+    call Game.new 0
+    pop static 0
+    push constant 0
+    return
+function Game.getInstance 0
+    push static 0
+    return
+function Game.getProjectileBank 0
+    push static 1
+    return
+function Game.getEnemyManager 0
+    push static 4
+    return
+function Game.getHealthManager 0
+    push static 3
+    return
+function Game.dispose 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    call Kuromi.dispose 1
+    pop temp 0
+    push static 2
+    call ScoreManager.dispose 1
+    pop temp 0
+    push static 3
+    call HealthManager.dispose 1
+    pop temp 0
+    push static 4
+    call EnemyManager.dispose 1
+    pop temp 0
+    push static 1
+    call ProjectileArray.dispose 1
+    pop temp 0
+    push static 3
+    call HealthManager.dispose 1
+    pop temp 0
+    push static 2
+    call ScoreManager.dispose 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return
+function Game.run 4
+    push argument 0
+    pop pointer 0
+label Game_0
+    push this 1
+    not
+    not
+    if-goto Game_1
+    push constant 0
+    pop local 1
+    call Keyboard.keyPressed 0
+    pop local 0
+    push static 3
+    call HealthManager.draw 1
+    pop temp 0
+    push local 0
+    push constant 131
+    eq
+    push local 0
+    push constant 133
+    eq
+    or
+    push local 0
+    push constant 130
+    eq
+    or
+    push local 0
+    push constant 132
+    eq
+    or
+    push local 0
+    push constant 32
+    eq
+    or
+    not
+    if-goto Game_3
+    push local 0
+    push constant 131
+    eq
+    not
+    if-goto Game_5
+    push constant 1
+    pop local 1
+    goto Game_4
+label Game_5
+label Game_4
+    push local 0
+    push constant 133
+    eq
+    not
+    if-goto Game_7
+    push constant 2
+    pop local 1
+    goto Game_6
+label Game_7
+label Game_6
+    push local 0
+    push constant 130
+    eq
+    not
+    if-goto Game_9
+    push constant 3
+    pop local 1
+    goto Game_8
+label Game_9
+label Game_8
+    push local 0
+    push constant 132
+    eq
+    not
+    if-goto Game_11
+    push constant 4
+    pop local 1
+    goto Game_10
+label Game_11
+label Game_10
+    push local 0
+    push constant 32
+    eq
+    not
+    if-goto Game_13
+    push static 1
+    call ProjectileArray.getCurrentLength 1
+    push static 1
+    call ProjectileArray.getMaxSize 1
+    lt
+    not
+    if-goto Game_15
+    push static 1
+    push this 0
+    call Kuromi.shoot 1
+    call ProjectileArray.enqueue 2
+    pop temp 0
+    goto Game_14
+label Game_15
+label Game_14
+    goto Game_12
+label Game_13
+label Game_12
+    goto Game_2
+label Game_3
+label Game_2
+    push static 3
+    call HealthManager.getHealthPoints 1
+    push constant 0
+    eq
+    not
+    if-goto Game_17
+    push constant 1
+    neg
+    pop this 1
+    goto Game_16
+label Game_17
+label Game_16
+    push local 0
+    push constant 140
+    eq
+    not
+    if-goto Game_19
+    push constant 1
+    neg
+    pop this 1
+    goto Game_18
+label Game_19
+label Game_18
+    push static 4
+    call EnemyManager.getEnemyCount 1
+    push this 5
+    eq
+    not
+    if-goto Game_21
+    push static 4
+    call EnemyManager.getLevel 1
+    pop local 3
+    push static 4
+    call EnemyManager.dispose 1
+    pop temp 0
+    push local 3
+    push constant 1
+    add
+    call EnemyManager.new 1
+    pop static 4
+    push constant 0
+    pop this 5
+    goto Game_20
+label Game_21
+label Game_20
+    push this 0
+    push local 1
+    call Kuromi.move 2
+    pop temp 0
+    push pointer 0
+    call Game.moveProjectiles 1
+    pop temp 0
+    push pointer 0
+    call Game.moveEnemies 1
+    pop temp 0
+    push constant 50
+    call Sys.wait 1
+    pop temp 0
+    goto Game_0
+label Game_1
+    push this 1
+    not
+    if-goto Game_23
+    push constant 10
+    push constant 27
+    call Output.moveCursor 2
+    pop temp 0
+    push constant 9
+    call String.new 1
+    push constant 71
+    call String.appendChar 2
+    push constant 97
+    call String.appendChar 2
+    push constant 109
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 79
+    call String.appendChar 2
+    push constant 118
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+    goto Game_22
+label Game_23
+label Game_22
+    push constant 0
+    return
+function Game.moveProjectiles 3
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+    push static 1
+    call ProjectileArray.getProjectiles 1
+    pop local 2
+label Game_24
+    push local 0
+    push static 1
+    call ProjectileArray.getCurrentLength 1
+    lt
+    not
+    if-goto Game_25
+    push local 0
+    push local 2
+    add
+    pop pointer 1
+    push that 0
+    pop local 1
+    push local 1
+    push constant 0
+    eq
+    not
+    not
+    if-goto Game_27
+    push local 1
+    call Projectile.move 1
+    not
+    if-goto Game_29
+    push static 1
+    push constant 0
+    call ProjectileArray.remove 2
+    pop temp 0
+    goto Game_28
+label Game_29
+    push pointer 0
+    push local 1
+    call Game.checkCollision 2
+    pop temp 0
+label Game_28
+    goto Game_26
+label Game_27
+label Game_26
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Game_24
+label Game_25
+    push constant 0
+    return
+function Game.moveEnemies 3
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+    push static 4
+    call EnemyManager.getEnemyArray 1
+    pop local 2
+label Game_30
+    push local 0
+    push static 4
+    call EnemyManager.getEnemyCount 1
+    lt
+    not
+    if-goto Game_31
+    push local 0
+    push local 2
+    add
+    pop pointer 1
+    push that 0
+    pop local 1
+    push local 1
+    push constant 0
+    eq
+    not
+    not
+    if-goto Game_33
+    push local 1
+    call Enemy.move 1
+    not
+    if-goto Game_35
+    push constant 3
+    call String.new 1
+    push constant 98
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 111
+    call String.appendChar 2
+    call Output.printString 1
+    pop temp 0
+    push local 1
+    call Enemy.dispose 1
+    pop temp 0
+    push static 3
+    push static 3
+    call HealthManager.getHealthPoints 1
+    push constant 1
+    sub
+    call HealthManager.setHealthPoints 2
+    pop temp 0
+    push this 5
+    push constant 1
+    add
+    pop this 5
+    push local 0
+    push local 2
+    add
+    push constant 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    goto Game_34
+label Game_35
+label Game_34
+    goto Game_32
+label Game_33
+label Game_32
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Game_30
+label Game_31
+    push constant 0
+    return
+function Game.drawBounds 0
+    push argument 0
+    pop pointer 0
+    push this 3
+    push this 4
+    push this 3
+    push constant 511
+    add
+    push this 4
+    call Screen.drawLine 4
+    pop temp 0
+    push constant 0
+    return
+function Game.checkCollision 11
+    push argument 0
+    pop pointer 0
+    push static 4
+    call EnemyManager.getEnemyArray 1
+    pop local 0
+    push constant 0
+    pop local 2
+    push argument 1
+    call Projectile.getRight 1
+    pop local 3
+    push argument 1
+    call Projectile.getTop 1
+    pop local 4
+    push argument 1
+    call Projectile.getBtm 1
+    pop local 5
+label Game_36
+    push local 2
+    push static 4
+    call EnemyManager.getEnemyCount 1
+    lt
+    not
+    if-goto Game_37
+    push local 2
+    push local 0
+    add
+    pop pointer 1
+    push that 0
+    pop local 1
+    push local 1
+    push constant 0
+    eq
+    not
+    not
+    if-goto Game_39
+    push local 1
+    call Enemy.getLeft 1
+    pop local 6
+    push local 1
+    call Enemy.getTop 1
+    pop local 7
+    push local 1
+    call Enemy.getBtm 1
+    pop local 8
+    push local 6
+    push local 3
+    lt
+    push local 4
+    push local 8
+    lt
+    and
+    push local 5
+    push local 7
+    gt
+    and
+    not
+    if-goto Game_41
+    push local 1
+    call Enemy.erase 1
+    pop temp 0
+    push local 1
+    call Enemy.dispose 1
+    pop temp 0
+    push local 2
+    push local 0
+    add
+    push constant 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push this 5
+    push constant 1
+    add
+    pop this 5
+    push argument 1
+    call Projectile.getIndex 1
+    pop local 9
+    push static 1
+    push local 9
+    call ProjectileArray.remove 2
+    pop temp 0
+    push static 2
+    push static 2
+    call ScoreManager.getScore 1
+    push constant 1
+    add
+    call ScoreManager.setScore 2
+    pop temp 0
+    goto Game_40
+label Game_41
+label Game_40
+    goto Game_38
+label Game_39
+label Game_38
+    push local 2
+    push constant 1
+    add
+    pop local 2
+    goto Game_36
+label Game_37
+    push constant 0
+    return

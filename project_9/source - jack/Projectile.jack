@@ -1,0 +1,68 @@
+class Projectile {
+
+    field int x, y, sizeX, sizeY;
+    field int index;
+
+    constructor Projectile new(int spawnX, int spawnY) {
+        let sizeX = 4;
+        let sizeY = 4;
+        let x = spawnX; // 26
+        let y = spawnY; // 243
+        do draw();
+        return this;
+    }
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x,y,x+sizeX,y+sizeY);
+        return;
+    }
+
+    method int getIndex() {
+        return index;
+    }
+
+    method void setIndex(int i) {
+        let index = i;
+        return;
+    }
+
+    method int getRight() {
+        return x+sizeX;
+    }
+
+    method int getTop() {
+        return y;
+    }
+
+    method int getBtm() {
+        return y+sizeY;
+    }
+
+    /** Deallocates memory. */
+    method void dispose() {
+        do erase();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x,y,x+sizeX,y+sizeY);
+        return;
+    }
+
+    method boolean move() {
+        var boolean outOfBounds;
+        let outOfBounds = false;
+        do erase();
+        let x = x + 4;
+        if (x > (511-sizeX)) {
+            let x = 511-sizeX;
+            let outOfBounds = true;
+        } else {
+            do draw();
+        }
+        return outOfBounds;
+    }
+}

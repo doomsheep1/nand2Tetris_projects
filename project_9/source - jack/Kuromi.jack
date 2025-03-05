@@ -1,0 +1,152 @@
+class Kuromi {
+
+    field int x, y, sizeX, sizeY;
+    field int boundX, boundY;
+
+    constructor Kuromi new(int Ax, int Ay, int xBound, int yBound) {
+        let sizeX = 25;
+        let sizeY = 24;
+        let x = Ax;
+        let y = Ay-sizeY;
+        let boundX = xBound;
+        let boundY = yBound;
+        do spawn();
+        return this;
+    }
+
+    method void spawn() {
+        do draw();
+        return;
+    }
+
+    method Projectile shoot() {
+        var Projectile projectile;
+        var int projectileSpawnX;
+        var int projectileSpawnY;
+        let projectileSpawnX = x + sizeX + 1;
+        let projectileSpawnY = y + (sizeY/2);
+        let projectile = Projectile.new(projectileSpawnX,projectileSpawnY);
+        return projectile;
+    }
+
+    method void move(int direction) {
+        if (~(direction = 0)) {
+            do erase(direction);
+            if (direction = 1) {
+                let y = y-12;
+                if(y<0) {
+                    let y = 0;
+                }
+            }
+
+            if (direction = 2) {
+                let y = y+12;
+                if((y+sizeY)>boundY) {
+                    let y = boundY-sizeY;
+                }
+            }
+
+            if (direction = 3) {
+                let x = x - 16;
+                if(x<0) {
+                    let x = 0;
+                }
+            }
+
+            if (direction = 4) {
+                let x = x + 16;
+                if((x+sizeX)>boundX) { 
+                    let x = boundX-sizeX;
+                }
+            }
+
+        }
+
+        do draw();
+        return;
+    }
+
+    // 1 = up, 2 = down, 3 = left, 4 = right
+    method void erase(int direction) {
+        var int xOffSet;
+        let xOffSet = 0;
+        do Screen.setColor(false);
+
+        if((direction = 1) | (direction = 2) | (direction = 4)) {
+            if((x-16)<0) {
+                let xOffSet = 0;
+            } else {
+                let xOffSet = -16;
+            }
+        }
+
+        do Screen.drawRectangle(x+xOffSet,y,x+sizeX,y+sizeY); 
+        return;
+    }
+
+    // draws kuromi (25)*(24) = 552 pixels
+    // y = 231, x = 486
+    method void draw() {
+        var int memAddress; 
+        let memAddress = 16384 + (y*32) + (x/16);
+        //let memAddress = 23838;
+       // column 0
+        do Memory.poke(memAddress, 12);
+        do Memory.poke(memAddress +32, 28);
+        do Memory.poke(memAddress +64, -4072);
+        do Memory.poke(memAddress +96, -456);
+        do Memory.poke(memAddress +128, 4088);
+        do Memory.poke(memAddress +160, -26632);
+        do Memory.poke(memAddress +192, 2040);
+        do Memory.poke(memAddress +224, 28664);
+        do Memory.poke(memAddress +256, -3592);
+        do Memory.poke(memAddress +288, 224);
+        do Memory.poke(memAddress +320, 880);
+        do Memory.poke(memAddress +352, 25456);
+        do Memory.poke(memAddress +384, 112);
+        do Memory.poke(memAddress +416, 224);
+        do Memory.poke(memAddress +448, 448);
+        do Memory.poke(memAddress +480, 1921);
+        do Memory.poke(memAddress +512, -25);
+        do Memory.poke(memAddress +544, -24818);
+        do Memory.poke(memAddress +576, 1822);
+        do Memory.poke(memAddress +608, 1328);
+        do Memory.poke(memAddress +640, 1888);
+        do Memory.poke(memAddress +672, 448);
+        do Memory.poke(memAddress +704, -1792);
+        do Memory.poke(memAddress +736, -28928);
+        // column 1
+        do Memory.poke(memAddress +1, 384);
+        do Memory.poke(memAddress +33, 448);
+        do Memory.poke(memAddress +65, 192);
+        do Memory.poke(memAddress +97, 227);
+        do Memory.poke(memAddress +129, 255);
+        do Memory.poke(memAddress +161, 254);
+        do Memory.poke(memAddress +193, 254);
+        do Memory.poke(memAddress +225, 255);
+        do Memory.poke(memAddress +257, 248);
+        do Memory.poke(memAddress +289, 48);
+        do Memory.poke(memAddress +321, 236);
+        do Memory.poke(memAddress +353, 236);
+        do Memory.poke(memAddress +385, 224);
+        do Memory.poke(memAddress +417, 112);
+        do Memory.poke(memAddress +449, 56);
+        do Memory.poke(memAddress +481, 30);
+        do Memory.poke(memAddress +513, 127);
+        do Memory.poke(memAddress +545, 15);
+        do Memory.poke(memAddress +577, 14);
+        do Memory.poke(memAddress +609, 10);
+        do Memory.poke(memAddress +641, 14);
+        do Memory.poke(memAddress +673, 8);
+        do Memory.poke(memAddress +705, 8);
+        do Memory.poke(memAddress +737, 15);
+        return;
+    }
+
+    /** Deallocates memory. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+
+        return;
+    }
+}

@@ -1,0 +1,99 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+
+/**
+ * The Central Processing unit (CPU).
+ * Consists of an ALU and a set of registers, designed to fetch and 
+ * execute instructions written in the Hack machine language.
+ * In particular, functions as follows:
+ * Executes the inputted instruction according to the Hack machine 
+ * language specification. The D and A in the language specification
+ * refer to CPU-resident registers, while M refers to the external
+ * memory location addressed by A, i.e. to Memory[A]. The inM input 
+ * holds the value of this location. If the current instruction needs 
+ * to write a value to M, the value is placed in outM, the address 
+ * of the target location is placed in the addressM output, and the 
+ * writeM control bit is asserted. (When writeM=0, any value may 
+ * appear in outM). The outM and writeM outputs are combinational: 
+ * they are affected instantaneously by the execution of the current 
+ * instruction. The addressM and pc outputs are clocked: although they 
+ * are affected by the execution of the current instruction, they commit 
+ * to their new values only in the next time unit. If reset=1 then the 
+ * CPU jumps to address 0 (i.e. sets pc=0 in next time unit) rather 
+ * than to the address resulting from executing the current instruction. 
+ */
+
+CHIP CPU {
+
+    IN  inM[16],      // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset=1) or continue executing
+                         // the current program (reset=0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write into M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+    // A Register
+    Not(in=instruction[15] , out=regInDecision );
+    Mux16(a=ALUOut , b=instruction , sel=regInDecision, out=regAIn );
+    Or(a=regInDecision , b=instruction[5] , out=regALoadDecision );
+    ARegister(in=regAIn , load=regALoadDecision , out=regAOut, out[0..14]=addressM );
+
+    // D Register
+    And(a=instruction[15] , b=instruction[4] , out=regDLoadDecision );
+    DRegister(in=ALUOut , load=regDLoadDecision , out=ALUIn1 );
+    
+    // writeM
+    And(a=instruction[15] , b=instruction[3] , out=writeM );
+
+    // ALU
+    // helpful thoughts
+    // if it is an A instruction, ALU does not need inM at all
+    // however, it is possible for A instruction's 12th bit to be 1 causing inM to go inside the ALU which is useless
+    // so we need to check what kind of instruction it is for the Mux gate before the ALU as well
+    // inM only has a purpose when its a C instruction + C instruction's a bit is 1
+    // if its a C instruction, yet the instruction's a bit is 0, it means whatever the ALU computes does not need inM
+    And(a=instruction[15] , b=instruction[12] , out=ALULoadDecision );
+    Mux16(a=regAOut , b=inM , sel=ALULoadDecision , out=ALUIn2 );
+    ALU(x=ALUIn1 , y=ALUIn2 , zx=instruction[11] , nx=instruction[10] , zy=instruction[9] , ny=instruction[8] , f=instruction[7] , no=instruction[6] , out=outM, out=ALUOut , zr=zr , ng=ng );
+
+    // PC
+    // 000 no jump
+    // 001 JGT
+    // 010 JEQ
+    // 011 JGE
+    // 100 JLT
+    // 101 JNE
+    // 110 JLE
+    // 111 JMP
+    And(a=instruction[15] , b=instruction[0] , out=j001 );
+    And(a=instruction[15] , b=instruction[1] , out=j010 );
+    And(a=instruction[15] , b=instruction[2] , out=j100 );
+    
+    // satisfies JGT
+    // satisfying JGT means it satisfies the following:
+    // JGE, JNE, JMP
+    Not(in=zr , out=notZero );
+    Not(in=ng , out=positive );
+    And(a=notZero , b=positive , out=greaterThanZero );
+    And(a=j001 , b=greaterThanZero , out=load1 );
+    
+    // satifies JEQ, JMP
+    And(a=j010 , b=zr , out=load2 );
+
+    // satisfies JLT
+    // satisfying JLT means it satifies the following:
+    // JLE, JNE, JMP
+    And(a=j100 , b=ng , out=load3 );
+
+    Or(a=load1 , b=load2 , out=maybeLoad );
+    Or(a=maybeLoad , b=load3 , out=loadPC );
+
+    PC(in=regAOut , load=loadPC , inc=true , reset=reset, out[0..14]=pc );
+}

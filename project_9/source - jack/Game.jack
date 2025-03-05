@@ -1,0 +1,213 @@
+/**
+ * Game class for angry bird that represents a running game
+ * Acts as the game controller
+ */
+
+class Game {
+    static Game instance;
+    static ProjectileArray projectileBank;
+    static ScoreManager scoreManager;
+    static HealthManager healthManager;
+    static EnemyManager enemyManager;
+    
+    field Kuromi kuromi;
+    field boolean exit;
+    field ScoreManager score;
+    field int boundsX, boundsY;
+    field int deadEnemiesCount;
+
+    constructor Game new() {
+        do Screen.clearScreen();
+        let boundsX = 0;
+        let boundsY = 240;
+        let score = 0;
+        let exit = false;
+        let deadEnemiesCount = 0;
+        let kuromi = Kuromi.new(0,127,511,boundsY-1);
+        let projectileBank = ProjectileArray.new(10);
+        let scoreManager = ScoreManager.new();
+        let healthManager = HealthManager.new();
+        let enemyManager = EnemyManager.new(1);
+        do drawBounds();
+        return this;
+    }
+
+    function void newInstance() {
+        let instance = Game.new();
+        return;
+    }
+
+    function Game getInstance() {
+        return instance;
+    }
+
+    function ProjectileArray getProjectileBank() {
+        return projectileBank;
+    }
+
+    function EnemyManager getEnemyManager() {
+        return enemyManager;
+    }
+
+    function HealthManager getHealthManager() {
+        return healthManager;
+    }
+
+    method void dispose() {
+        do kuromi.dispose();
+        do scoreManager.dispose();
+        do healthManager.dispose();
+        do enemyManager.dispose();
+        do projectileBank.dispose();
+        do healthManager.dispose();
+        do scoreManager.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void run() {
+        var char key;
+        var int direction;
+        var Projectile projectile;
+        var int currentLevel;
+
+        while (~exit) {
+            let direction = 0;
+            let key = Keyboard.keyPressed();
+
+            do healthManager.draw();
+
+            if ((key = 131) | (key = 133) | (key = 130) | (key = 132) | (key = 32)) {
+                if (key = 131) {
+                    let direction = 1;
+                }
+
+                if (key = 133) {
+                    let direction = 2;
+                }
+
+                if (key = 130) {
+                    let direction = 3;
+                }
+
+                if (key = 132) {
+                    let direction = 4;
+                }
+
+                if (key = 32) {
+                    if (projectileBank.getCurrentLength() < projectileBank.getMaxSize()) {
+                        do projectileBank.enqueue(kuromi.shoot());
+                    }
+                }
+            }
+
+            if (healthManager.getHealthPoints() = 0) {
+                let exit = true;
+            }
+
+            if (key = 140) {
+                let exit = true;
+            }
+
+            if(enemyManager.getEnemyCount() = deadEnemiesCount) {
+                let currentLevel = enemyManager.getLevel();
+                do enemyManager.dispose();
+                let enemyManager = EnemyManager.new(currentLevel+1);
+                let deadEnemiesCount = 0;
+            }
+
+            do kuromi.move(direction);
+            do moveProjectiles();
+            do moveEnemies();
+            do Sys.wait(50);
+        }
+
+        if (exit) {
+            do Output.moveCursor(10,27);
+            do Output.printString("Game Over");
+        }
+
+        return;
+    }
+
+    method void moveProjectiles() {
+        var int i;
+        var Projectile movingProjectile;
+        var Array projectileArray;
+        let i = 0;
+        let projectileArray = projectileBank.getProjectiles();
+        while(i < projectileBank.getCurrentLength()) {
+            let movingProjectile = projectileArray[i];
+            if(~(movingProjectile = null)) {
+                if(movingProjectile.move()) {
+                    do projectileBank.remove(0);
+                } else {
+                    do checkCollision(movingProjectile);
+                }
+            }
+            let i = i + 1;
+        }
+
+        return;
+    }
+
+    method void moveEnemies() {
+        var int i;
+        var Enemy currentEnemy;
+        var Array enemyArray;
+        let i = 0;
+        let enemyArray = enemyManager.getEnemyArray();
+        while(i < enemyManager.getEnemyCount()) {
+            let currentEnemy = enemyArray[i];
+            if(~(currentEnemy = null)) {
+                if(currentEnemy.move()) {
+                    do currentEnemy.dispose();
+                    do healthManager.setHealthPoints(healthManager.getHealthPoints()-1);
+                    let deadEnemiesCount = deadEnemiesCount + 1;
+                    let enemyArray[i] = null;
+                }
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method void drawBounds() {
+        do Screen.drawLine(boundsX, boundsY, boundsX+511,boundsY);
+        return;
+    }
+
+    method void checkCollision(Projectile movingProjectile) {
+        var Array enemyArray;
+        var Enemy currentEnemy;
+        var int i, projectileRight,projectileTop,projectileBtm,enemyLeft,enemyTop,enemyBtm;
+        var int projectileIndex;
+        var int enemiesDestroyedCount;
+        let enemyArray = enemyManager.getEnemyArray();
+        let i = 0;
+        let projectileRight = movingProjectile.getRight();
+        let projectileTop = movingProjectile.getTop();
+        let projectileBtm = movingProjectile.getBtm();
+        while(i < enemyManager.getEnemyCount()) {
+            let currentEnemy = enemyArray[i];
+            if(~(currentEnemy = null)) {
+                let enemyLeft = currentEnemy.getLeft();
+                let enemyTop = currentEnemy.getTop();
+                let enemyBtm = currentEnemy.getBtm();
+                if((enemyLeft < projectileRight) & (projectileTop < enemyBtm) & (projectileBtm > enemyTop)) {
+                    do currentEnemy.erase();
+                    do currentEnemy.dispose();
+                    let enemyArray[i] = null;
+                    let deadEnemiesCount = deadEnemiesCount + 1;
+                    let projectileIndex = movingProjectile.getIndex();
+                    do projectileBank.remove(projectileIndex);
+                    do scoreManager.setScore(scoreManager.getScore() + 1);
+                }
+            }
+            let i = i + 1;
+        }
+
+        return;
+    }
+
+} 

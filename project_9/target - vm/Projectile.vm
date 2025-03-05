@@ -1,0 +1,130 @@
+function Projectile.new 0
+    push constant 5
+    call Memory.alloc 1
+    pop pointer 0
+    push constant 4
+    pop this 2
+    push constant 4
+    pop this 3
+    push argument 0
+    pop this 0
+    push argument 1
+    pop this 1
+    push pointer 0
+    call Projectile.draw 1
+    pop temp 0
+    push pointer 0
+    return
+function Projectile.draw 0
+    push argument 0
+    pop pointer 0
+    push constant 1
+    neg
+    call Screen.setColor 1
+    pop temp 0
+    push this 0
+    push this 1
+    push this 0
+    push this 2
+    add
+    push this 1
+    push this 3
+    add
+    call Screen.drawRectangle 4
+    pop temp 0
+    push constant 0
+    return
+function Projectile.getIndex 0
+    push argument 0
+    pop pointer 0
+    push this 4
+    return
+function Projectile.setIndex 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 4
+    push constant 0
+    return
+function Projectile.getRight 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push this 2
+    add
+    return
+function Projectile.getTop 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    return
+function Projectile.getBtm 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    push this 3
+    add
+    return
+function Projectile.dispose 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Projectile.erase 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return
+function Projectile.erase 0
+    push argument 0
+    pop pointer 0
+    push constant 0
+    call Screen.setColor 1
+    pop temp 0
+    push this 0
+    push this 1
+    push this 0
+    push this 2
+    add
+    push this 1
+    push this 3
+    add
+    call Screen.drawRectangle 4
+    pop temp 0
+    push constant 0
+    return
+function Projectile.move 1
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+    push pointer 0
+    call Projectile.erase 1
+    pop temp 0
+    push this 0
+    push constant 4
+    add
+    pop this 0
+    push this 0
+    push constant 511
+    push this 2
+    sub
+    gt
+    not
+    if-goto Projectile_1
+    push constant 511
+    push this 2
+    sub
+    pop this 0
+    push constant 1
+    neg
+    pop local 0
+    goto Projectile_0
+label Projectile_1
+    push pointer 0
+    call Projectile.draw 1
+    pop temp 0
+label Projectile_0
+    push local 0
+    return

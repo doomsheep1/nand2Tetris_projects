@@ -1,0 +1,294 @@
+function Math.init 2
+    push constant 0
+    pop local 0
+    push constant 16
+    pop static 0
+    push constant 1
+    pop local 1
+    push static 0
+    call Array.new 1
+    pop static 1
+label Math_0
+    push local 0
+    push static 0
+    lt
+    not
+    if-goto Math_1
+    push local 0
+    push static 1
+    add
+    push local 1
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push local 1
+    push local 1
+    add
+    pop local 1
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Math_0
+label Math_1
+    push constant 0
+    return
+function Math.twoToThe 0
+    push argument 0
+    push static 1
+    add
+    pop pointer 1
+    push that 0
+    return
+function Math.multiply 3
+    push constant 0
+    pop local 0
+    push argument 0
+    pop local 1
+    push constant 0
+    pop local 2
+label Math_2
+    push local 2
+    push constant 16
+    lt
+    not
+    if-goto Math_3
+    push argument 1
+    push local 2
+    call Math.bit 2
+    not
+    if-goto Math_5
+    push local 0
+    push local 1
+    add
+    pop local 0
+    goto Math_4
+label Math_5
+label Math_4
+    push local 1
+    push local 1
+    add
+    pop local 1
+    push local 2
+    push constant 1
+    add
+    pop local 2
+    goto Math_2
+label Math_3
+    push local 0
+    return
+function Math.divide 6
+    push argument 0
+    push constant 0
+    lt
+    pop local 4
+    push argument 1
+    push constant 0
+    lt
+    pop local 5
+    push local 4
+    not
+    if-goto Math_7
+    push argument 0
+    call Math.abs 1
+    pop local 0
+    goto Math_6
+label Math_7
+    push argument 0
+    pop local 0
+label Math_6
+    push local 5
+    not
+    if-goto Math_9
+    push argument 1
+    call Math.abs 1
+    pop local 1
+    goto Math_8
+label Math_9
+    push argument 1
+    pop local 1
+label Math_8
+    push local 1
+    push local 0
+    gt
+    push local 1
+    push constant 0
+    lt
+    or
+    not
+    if-goto Math_11
+    push constant 0
+    pop local 2
+    goto Math_10
+label Math_11
+    push local 0
+    push local 1
+    push local 1
+    add
+    call Math.divide 2
+    pop local 3
+    push local 0
+    push constant 2
+    push local 3
+    call Math.multiply 2
+    push local 1
+    call Math.multiply 2
+    sub
+    push local 1
+    lt
+    not
+    if-goto Math_13
+    push local 3
+    push local 3
+    add
+    pop local 2
+    goto Math_12
+label Math_13
+    push local 3
+    push local 3
+    add
+    push constant 1
+    add
+    pop local 2
+label Math_12
+    push local 4
+    push local 5
+    eq
+    not
+    not
+    if-goto Math_15
+    push local 2
+    neg
+    pop local 2
+    goto Math_14
+label Math_15
+label Math_14
+label Math_10
+    push local 2
+    return
+function Math.sqrt 4
+    push constant 0
+    pop local 0
+    push static 0
+    push constant 2
+    call Math.divide 2
+    push constant 1
+    sub
+    pop local 1
+label Math_16
+    push local 1
+    push constant 0
+    gt
+    push local 1
+    push constant 0
+    eq
+    or
+    not
+    if-goto Math_17
+    push local 0
+    push local 1
+    push static 1
+    add
+    pop pointer 1
+    push that 0
+    add
+    pop local 2
+    push local 2
+    push local 2
+    call Math.multiply 2
+    pop local 3
+    push local 3
+    push argument 0
+    lt
+    push local 3
+    push argument 0
+    eq
+    or
+    push local 3
+    and
+    push constant 0
+    gt
+    not
+    if-goto Math_19
+    push local 2
+    pop local 0
+    goto Math_18
+label Math_19
+label Math_18
+    push local 1
+    push constant 1
+    sub
+    pop local 1
+    goto Math_16
+label Math_17
+    push local 0
+    return
+function Math.max 1
+    push argument 0
+    push argument 1
+    gt
+    not
+    if-goto Math_21
+    push argument 0
+    pop local 0
+    goto Math_20
+label Math_21
+    push argument 1
+    pop local 0
+label Math_20
+    push local 0
+    return
+function Math.min 1
+    push argument 0
+    push argument 1
+    lt
+    not
+    if-goto Math_23
+    push argument 0
+    pop local 0
+    goto Math_22
+label Math_23
+    push argument 1
+    pop local 0
+label Math_22
+    push local 0
+    return
+function Math.abs 1
+    push argument 0
+    push constant 0
+    lt
+    not
+    if-goto Math_25
+    push argument 0
+    neg
+    pop local 0
+    goto Math_24
+label Math_25
+    push argument 0
+    pop local 0
+label Math_24
+    push local 0
+    return
+function Math.bit 1
+    push argument 1
+    push static 1
+    add
+    pop pointer 1
+    push that 0
+    push argument 0
+    and
+    push constant 0
+    eq
+    not
+    if-goto Math_27
+    push constant 0
+    pop local 0
+    goto Math_26
+label Math_27
+    push constant 1
+    neg
+    pop local 0
+label Math_26
+    push local 0
+    return

@@ -1,0 +1,232 @@
+function HealthManager.new 0
+    push constant 3
+    call Memory.alloc 1
+    pop pointer 0
+    push constant 3
+    pop this 0
+    push constant 15
+    pop this 1
+    push constant 10
+    pop this 2
+    push pointer 0
+    call HealthManager.draw 1
+    pop temp 0
+    push pointer 0
+    return
+function HealthManager.draw 4
+    push argument 0
+    pop pointer 0
+    push constant 2
+    pop local 0
+    push constant 1
+    pop local 1
+    push constant 0
+    pop local 3
+label HealthManager_0
+    push local 3
+    push this 0
+    lt
+    not
+    if-goto HealthManager_1
+    push local 3
+    push constant 0
+    gt
+    not
+    if-goto HealthManager_3
+    push local 0
+    push this 1
+    add
+    pop local 0
+    goto HealthManager_2
+label HealthManager_3
+label HealthManager_2
+    push constant 16384
+    push local 1
+    push constant 32
+    call Math.multiply 2
+    add
+    push local 0
+    push constant 16
+    call Math.divide 2
+    add
+    pop local 2
+    push local 2
+    push constant 7196
+    call Memory.poke 2
+    pop temp 0
+    push local 2
+    push constant 32
+    add
+    push constant 13158
+    call Memory.poke 2
+    pop temp 0
+    push local 2
+    push constant 64
+    add
+    push constant 16577
+    call Memory.poke 2
+    pop temp 0
+    push local 2
+    push constant 96
+    add
+    push constant 16385
+    call Memory.poke 2
+    pop temp 0
+    push local 2
+    push constant 128
+    add
+    push constant 16385
+    call Memory.poke 2
+    pop temp 0
+    push local 2
+    push constant 160
+    add
+    push constant 12294
+    call Memory.poke 2
+    pop temp 0
+    push local 2
+    push constant 192
+    add
+    push constant 6156
+    call Memory.poke 2
+    pop temp 0
+    push local 2
+    push constant 224
+    add
+    push constant 3096
+    call Memory.poke 2
+    pop temp 0
+    push local 2
+    push constant 256
+    add
+    push constant 1584
+    call Memory.poke 2
+    pop temp 0
+    push local 2
+    push constant 288
+    add
+    push constant 992
+    call Memory.poke 2
+    pop temp 0
+    push local 3
+    push constant 1
+    add
+    pop local 3
+    goto HealthManager_0
+label HealthManager_1
+    push constant 0
+    return
+function HealthManager.dispose 0
+    push argument 0
+    pop pointer 0
+    push constant 2
+    pop this 0
+    push pointer 0
+    call HealthManager.erase 1
+    pop temp 0
+    push constant 1
+    pop this 0
+    push pointer 0
+    call HealthManager.erase 1
+    pop temp 0
+    push constant 0
+    pop this 0
+    push pointer 0
+    call HealthManager.erase 1
+    pop temp 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return
+function HealthManager.setHealthPoints 0
+    push argument 0
+    pop pointer 0
+    push argument 1
+    pop this 0
+    push this 0
+    push constant 0
+    lt
+    push this 0
+    push constant 0
+    eq
+    or
+    not
+    if-goto HealthManager_5
+    push constant 0
+    pop this 0
+    goto HealthManager_4
+label HealthManager_5
+label HealthManager_4
+    push pointer 0
+    call HealthManager.erase 1
+    pop temp 0
+    push constant 0
+    return
+function HealthManager.getHealthPoints 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    return
+function HealthManager.erase 0
+    push argument 0
+    pop pointer 0
+    push this 0
+    push constant 2
+    eq
+    not
+    if-goto HealthManager_7
+    push constant 0
+    call Screen.setColor 1
+    pop temp 0
+    push constant 32
+    push constant 1
+    push constant 32
+    push this 1
+    add
+    push this 2
+    call Screen.drawRectangle 4
+    pop temp 0
+    goto HealthManager_6
+label HealthManager_7
+label HealthManager_6
+    push this 0
+    push constant 1
+    eq
+    not
+    if-goto HealthManager_9
+    push constant 0
+    call Screen.setColor 1
+    pop temp 0
+    push constant 16
+    push constant 1
+    push constant 17
+    push this 1
+    add
+    push this 2
+    call Screen.drawRectangle 4
+    pop temp 0
+    goto HealthManager_8
+label HealthManager_9
+label HealthManager_8
+    push this 0
+    push constant 0
+    eq
+    not
+    if-goto HealthManager_11
+    push constant 0
+    call Screen.setColor 1
+    pop temp 0
+    push constant 0
+    push constant 1
+    push constant 2
+    push this 1
+    add
+    push this 2
+    call Screen.drawRectangle 4
+    pop temp 0
+    goto HealthManager_10
+label HealthManager_11
+label HealthManager_10
+    push constant 0
+    return

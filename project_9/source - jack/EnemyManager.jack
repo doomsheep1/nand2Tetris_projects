@@ -1,0 +1,89 @@
+class EnemyManager {
+    field int enemyCount, level;
+    field Array enemyArray;
+
+    constructor EnemyManager new(int currentLevel) {
+        let enemyCount = 2;
+        let level = currentLevel;
+        do spawnEnemies();
+        return this;
+    }
+
+    method int getEnemyCount() {
+        return enemyCount * level;
+    }
+
+    method void setEnemyCount(int count) {
+        let enemyCount = count;
+        return;
+    }
+
+    method Array getEnemyArray() {
+        return enemyArray;
+    }
+
+    method void spawnEnemies() {
+        var int i, seedY, randomX, randomY;
+        var Enemy currentEnemy;
+        var int spawnY;
+        let enemyArray = Array.new(getEnemyCount());
+        let seedY = 1;
+        let i = 0;
+        while(i < getEnemyCount()) {
+            let seedY = randomNumber(seedY,240,60);
+            let spawnY = seedY;
+            if((spawnY-22) < 0) {
+                let spawnY = 0;
+            }
+
+            if((spawnY > 240) | (spawnY = 240) | ((spawnY+22) > 240)) {
+                let spawnY = 240 - 23;
+            }
+            
+            let currentEnemy = Enemy.new(511, spawnY);
+            let enemyArray[i] = currentEnemy;
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method int testLcg(int seed) {
+        return randomNumber(seed,512,508);
+    }
+    
+    // uses LCG algorithm for randoming
+    method int randomNumber(int seed, int m, int a) {
+        var int c, temp, ret;
+        // random y using lcg
+        let c = 105;
+        let temp = (a+1) * seed + c;
+        let ret = temp - (Math.divide(temp,m)*m);
+        return ret;
+    }
+
+    method void setLevel(int value) {
+        let level = value;
+        return;
+    }
+
+    method int getLevel() {
+        return level;
+    }
+
+    method void dispose() {
+        var int i;
+        var Enemy currentEnemy;
+        let i = 0;
+        while(i < getEnemyCount()) {
+            let currentEnemy = enemyArray[i];
+            if(~(currentEnemy = null)) {
+                do currentEnemy.dispose();
+            }
+            let i = i + 1;
+        }
+
+        do enemyArray.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+}

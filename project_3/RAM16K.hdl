@@ -1,0 +1,99 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/3/b/RAM16K.hdl
+/**
+ * Memory of 16K 16-bit registers.
+ * If load is asserted, the value of the register selected by
+ * address is set to in; Otherwise, the value does not change.
+ * The value of the selected register is emitted by out.
+ */
+CHIP RAM16K {
+    IN in[16], load, address[14];
+    OUT out[16];
+
+    PARTS:
+    //// Replace this comment with your code.
+    DMux4Way(in=in[0] , sel=address[0..1] , a=regA0 , b=regB0 , c=regC0 , d=regD0 );
+    DMux4Way(in=in[1] , sel=address[0..1] , a=regA1 , b=regB1 , c=regC1 , d=regD1 );
+    DMux4Way(in=in[2] , sel=address[0..1] , a=regA2 , b=regB2 , c=regC2 , d=regD2 );
+    DMux4Way(in=in[3] , sel=address[0..1] , a=regA3 , b=regB3 , c=regC3 , d=regD3 );
+    DMux4Way(in=in[4] , sel=address[0..1] , a=regA4 , b=regB4 , c=regC4 , d=regD4 );
+    DMux4Way(in=in[5] , sel=address[0..1] , a=regA5 , b=regB5 , c=regC5 , d=regD5 );
+    DMux4Way(in=in[6] , sel=address[0..1] , a=regA6 , b=regB6 , c=regC6 , d=regD6 );
+    DMux4Way(in=in[7] , sel=address[0..1] , a=regA7 , b=regB7 , c=regC7 , d=regD7 );
+    DMux4Way(in=in[8] , sel=address[0..1] , a=regA8 , b=regB8 , c=regC8 , d=regD8 );
+    DMux4Way(in=in[9] , sel=address[0..1] , a=regA9 , b=regB9 , c=regC9 , d=regD9 );
+    DMux4Way(in=in[10] , sel=address[0..1] , a=regA10 , b=regB10 , c=regC10 , d=regD10 );
+    DMux4Way(in=in[11] , sel=address[0..1] , a=regA11 , b=regB11 , c=regC11 , d=regD11 );
+    DMux4Way(in=in[12] , sel=address[0..1] , a=regA12 , b=regB12 , c=regC12 , d=regD12 );
+    DMux4Way(in=in[13] , sel=address[0..1] , a=regA13 , b=regB13 , c=regC13 , d=regD13 );
+    DMux4Way(in=in[14] , sel=address[0..1] , a=regA14 , b=regB14 , c=regC14 , d=regD14 );
+    DMux4Way(in=in[15] , sel=address[0..1] , a=regA15 , b=regB15 , c=regC15 , d=regD15 );
+    DMux4Way(in=load , sel=address[0..1] , a=regALoad , b=regBLoad , c=regCLoad , d=regDLoad );
+    RAM4K(in[0]=regA0,
+             in[1]=regA1,
+             in[2]=regA2,
+             in[3]=regA3,
+             in[4]=regA4,
+             in[5]=regA5,
+             in[6]=regA6,
+             in[7]=regA7,
+             in[8]=regA8,
+             in[9]=regA9,
+             in[10]=regA10,
+             in[11]=regA11,
+             in[12]=regA12,
+             in[13]=regA13,
+             in[14]=regA14,
+             in[15]=regA15 , load=regALoad , address=address[2..13], out=outA );
+    RAM4K(in[0]=regB0,
+             in[1]=regB1,
+             in[2]=regB2,
+             in[3]=regB3,
+             in[4]=regB4,
+             in[5]=regB5,
+             in[6]=regB6,
+             in[7]=regB7,
+             in[8]=regB8,
+             in[9]=regB9,
+             in[10]=regB10,
+             in[11]=regB11,
+             in[12]=regB12,
+             in[13]=regB13,
+             in[14]=regB14,
+             in[15]=regB15 , load=regBLoad , address=address[2..13], out=outB );
+    RAM4K(in[0]=regC0,
+             in[1]=regC1,
+             in[2]=regC2,
+             in[3]=regC3,
+             in[4]=regC4,
+             in[5]=regC5,
+             in[6]=regC6,
+             in[7]=regC7,
+             in[8]=regC8,
+             in[9]=regC9,
+             in[10]=regC10,
+             in[11]=regC11,
+             in[12]=regC12,
+             in[13]=regC13,
+             in[14]=regC14,
+             in[15]=regC15 , load=regCLoad , address=address[2..13], out=outC );
+    RAM4K(in[0]=regD0,
+             in[1]=regD1,
+             in[2]=regD2,
+             in[3]=regD3,
+             in[4]=regD4,
+             in[5]=regD5,
+             in[6]=regD6,
+             in[7]=regD7,
+             in[8]=regD8,
+             in[9]=regD9,
+             in[10]=regD10,
+             in[11]=regD11,
+             in[12]=regD12,
+             in[13]=regD13,
+             in[14]=regD14,
+             in[15]=regD15 , load=regDLoad , address=address[2..13], out=outD );
+    Mux4Way16(a=outA , b=outB , c=outC , d=outD , sel=address[0..1] , out=out );
+}

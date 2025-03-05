@@ -1,0 +1,162 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/3/a/RAM64.hdl
+/**
+ * Memory of sixty four 16-bit registers.
+ * If load is asserted, the value of the register selected by
+ * address is set to in; Otherwise, the value does not change.
+ * The value of the selected register is emitted by out.
+ */
+CHIP RAM64 {
+    IN in[16], load, address[6];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in=in[0] , sel=address[0..2] , a=regA0 , b=regB0 , c=regC0 , d=regD0 , e=regE0 , f=regF0 , g=regG0 , h=regH0 );
+    DMux8Way(in=in[1] , sel=address[0..2] , a=regA1 , b=regB1 , c=regC1 , d=regD1 , e=regE1 , f=regF1 , g=regG1 , h=regH1 );
+    DMux8Way(in=in[2] , sel=address[0..2] , a=regA2 , b=regB2 , c=regC2 , d=regD2 , e=regE2 , f=regF2 , g=regG2 , h=regH2 );
+    DMux8Way(in=in[3] , sel=address[0..2] , a=regA3 , b=regB3 , c=regC3 , d=regD3 , e=regE3 , f=regF3 , g=regG3 , h=regH3 );
+    DMux8Way(in=in[4] , sel=address[0..2] , a=regA4 , b=regB4 , c=regC4 , d=regD4 , e=regE4 , f=regF4 , g=regG4 , h=regH4 );
+    DMux8Way(in=in[5] , sel=address[0..2] , a=regA5 , b=regB5 , c=regC5 , d=regD5 , e=regE5 , f=regF5 , g=regG5 , h=regH5 );
+    DMux8Way(in=in[6] , sel=address[0..2] , a=regA6 , b=regB6 , c=regC6 , d=regD6 , e=regE6 , f=regF6 , g=regG6 , h=regH6 );
+    DMux8Way(in=in[7] , sel=address[0..2] , a=regA7 , b=regB7 , c=regC7 , d=regD7 , e=regE7 , f=regF7 , g=regG7 , h=regH7 );
+    DMux8Way(in=in[8] , sel=address[0..2] , a=regA8 , b=regB8 , c=regC8 , d=regD8 , e=regE8 , f=regF8 , g=regG8 , h=regH8 );
+    DMux8Way(in=in[9] , sel=address[0..2] , a=regA9 , b=regB9 , c=regC9 , d=regD9 , e=regE9 , f=regF9 , g=regG9 , h=regH9 );
+    DMux8Way(in=in[10] , sel=address[0..2] , a=regA10 , b=regB10 , c=regC10 , d=regD10 , e=regE10 , f=regF10 , g=regG10 , h=regH10 );
+    DMux8Way(in=in[11] , sel=address[0..2] , a=regA11 , b=regB11 , c=regC11 , d=regD11 , e=regE11 , f=regF11 , g=regG11 , h=regH11 );
+    DMux8Way(in=in[12] , sel=address[0..2] , a=regA12 , b=regB12 , c=regC12 , d=regD12 , e=regE12 , f=regF12 , g=regG12 , h=regH12 );
+    DMux8Way(in=in[13] , sel=address[0..2] , a=regA13 , b=regB13 , c=regC13 , d=regD13 , e=regE13 , f=regF13 , g=regG13 , h=regH13 );
+    DMux8Way(in=in[14] , sel=address[0..2] , a=regA14 , b=regB14 , c=regC14 , d=regD14 , e=regE14 , f=regF14 , g=regG14 , h=regH14 );
+    DMux8Way(in=in[15] , sel=address[0..2] , a=regA15 , b=regB15 , c=regC15 , d=regD15 , e=regE15 , f=regF15 , g=regG15 , h=regH15 );
+    DMux8Way(in=load , sel=address[0..2] , a=regALoad , b=regBLoad , c=regCLoad , d=regDLoad , e=regELoad , f=regFLoad , g=regGLoad , h=regHLoad );
+    RAM8(in[0]=regA0,
+             in[1]=regA1,
+             in[2]=regA2,
+             in[3]=regA3,
+             in[4]=regA4,
+             in[5]=regA5,
+             in[6]=regA6,
+             in[7]=regA7,
+             in[8]=regA8,
+             in[9]=regA9,
+             in[10]=regA10,
+             in[11]=regA11,
+             in[12]=regA12,
+             in[13]=regA13,
+             in[14]=regA14,
+             in[15]=regA15 , load=regALoad , address=address[3..5], out=outA );
+    RAM8(in[0]=regB0,
+             in[1]=regB1,
+             in[2]=regB2,
+             in[3]=regB3,
+             in[4]=regB4,
+             in[5]=regB5,
+             in[6]=regB6,
+             in[7]=regB7,
+             in[8]=regB8,
+             in[9]=regB9,
+             in[10]=regB10,
+             in[11]=regB11,
+             in[12]=regB12,
+             in[13]=regB13,
+             in[14]=regB14,
+             in[15]=regB15 , load=regBLoad , address=address[3..5], out=outB );
+    RAM8(in[0]=regC0,
+             in[1]=regC1,
+             in[2]=regC2,
+             in[3]=regC3,
+             in[4]=regC4,
+             in[5]=regC5,
+             in[6]=regC6,
+             in[7]=regC7,
+             in[8]=regC8,
+             in[9]=regC9,
+             in[10]=regC10,
+             in[11]=regC11,
+             in[12]=regC12,
+             in[13]=regC13,
+             in[14]=regC14,
+             in[15]=regC15 , load=regCLoad , address=address[3..5], out=outC );
+    RAM8(in[0]=regD0,
+             in[1]=regD1,
+             in[2]=regD2,
+             in[3]=regD3,
+             in[4]=regD4,
+             in[5]=regD5,
+             in[6]=regD6,
+             in[7]=regD7,
+             in[8]=regD8,
+             in[9]=regD9,
+             in[10]=regD10,
+             in[11]=regD11,
+             in[12]=regD12,
+             in[13]=regD13,
+             in[14]=regD14,
+             in[15]=regD15 , load=regDLoad , address=address[3..5], out=outD );
+    RAM8(in[0]=regE0,
+             in[1]=regE1,
+             in[2]=regE2,
+             in[3]=regE3,
+             in[4]=regE4,
+             in[5]=regE5,
+             in[6]=regE6,
+             in[7]=regE7,
+             in[8]=regE8,
+             in[9]=regE9,
+             in[10]=regE10,
+             in[11]=regE11,
+             in[12]=regE12,
+             in[13]=regE13,
+             in[14]=regE14,
+             in[15]=regE15 , load=regELoad , address=address[3..5], out=outE );
+    RAM8(in[0]=regF0,
+             in[1]=regF1,
+             in[2]=regF2,
+             in[3]=regF3,
+             in[4]=regF4,
+             in[5]=regF5,
+             in[6]=regF6,
+             in[7]=regF7,
+             in[8]=regF8,
+             in[9]=regF9,
+             in[10]=regF10,
+             in[11]=regF11,
+             in[12]=regF12,
+             in[13]=regF13,
+             in[14]=regF14,
+             in[15]=regF15 , load=regFLoad , address=address[3..5], out=outF );
+    RAM8(in[0]=regG0,
+             in[1]=regG1,
+             in[2]=regG2,
+             in[3]=regG3,
+             in[4]=regG4,
+             in[5]=regG5,
+             in[6]=regG6,
+             in[7]=regG7,
+             in[8]=regG8,
+             in[9]=regG9,
+             in[10]=regG10,
+             in[11]=regG11,
+             in[12]=regG12,
+             in[13]=regG13,
+             in[14]=regG14,
+             in[15]=regG15 , load=regGLoad , address=address[3..5], out=outG );
+    RAM8(in[0]=regH0,
+             in[1]=regH1,
+             in[2]=regH2,
+             in[3]=regH3,
+             in[4]=regH4,
+             in[5]=regH5,
+             in[6]=regH6,
+             in[7]=regH7,
+             in[8]=regH8,
+             in[9]=regH9,
+             in[10]=regH10,
+             in[11]=regH11,
+             in[12]=regH12,
+             in[13]=regH13,
+             in[14]=regH14,
+             in[15]=regH15 , load=regHLoad , address=address[3..5], out=outH );
+    Mux8Way16(a=outA , b=outB , c=outC , d=outD , e=outE , f=outF , g=outG , h=outH , sel=address[0..2] , out=out );
+}
