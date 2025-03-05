@@ -11,4 +11,4 @@ This is the nand2tetris project 7 and 8 virtual machine translator that was writ
 2. Open command line interface in the directory
 3. Type cargo run <file_name>.vm to run or
 4. Type cargo run <directory_containing_one_or_more_vm_files> to run or 
-5. Alternative to 3 and 4, if you know how to build a cargo project, you can run it as a binary. <a href="https://doc.rust-lang.org/cargo/commands/cargo-build.html">More information</a>a
+5. Alternative to 3 and 4, if you know how to build a cargo project, you can run it as a binary. <a href="https://doc.rust-lang.org/cargo/commands/cargo-build.html">More information</a>
